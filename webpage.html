@@ -1,0 +1,436 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Linux Command Guide</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #F0F0F0, #C2E9FB);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      color: #333;
+      padding: 0 20px;
+      transition: background 0.3s ease-in-out, color 0.3s ease-in-out;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      max-width: 1200px;
+      margin-top: 30px;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s ease-in-out;
+    }
+
+    .header {
+  background-color:  #008080;
+  padding: 20px;
+  text-align: center;
+  color: white;
+  font-size: 2.5rem;
+  font-weight: bold;
+}
+    
+
+    .header p {
+      font-size: 1.2rem;
+      font-weight: normal;
+      color: #FFFFFF;
+      margin-top: 10px;
+    }
+
+    .commands-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .command-card {
+      background-color: #f1f1f1;
+      width: 250px;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s, box-shadow 0.3s ease-in-out, background-color 0.3s;
+      font-size: 1.25rem;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .command-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+      background-color: #007bff;
+      color: white;
+    }
+
+    .command-details {
+      display: none;
+      background-color: #f9f9f9;
+      color: #333;
+      padding: 30px;
+      border-radius: 8px;
+      margin-top: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    .command-details h3 {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #007bff;
+      margin-bottom: 10px;
+    }
+
+    .command-details pre {
+      background-color: #f1f1f1;
+      padding: 10px;
+      border-radius: 6px;
+      overflow-x: auto;
+    }
+
+    .footer {
+      text-align: center;
+      font-size: 1rem;
+      padding: 20px;
+      background-color:  #008080;
+      color: white;
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    body.dark-mode {
+      background: #121212;
+      color: #e0e0e0;
+    }
+
+    body.dark-mode .command-card {
+      background-color: #333;
+      color: #e0e0e0;
+    }
+
+    body.dark-mode .command-card:hover {
+      background-color: #007bff;
+      color: white;
+    }
+
+    body.dark-mode .command-details {
+      background-color: #1e1e1e;
+      color: #e0e0e0;
+    }
+
+    body.dark-mode .command-details pre {
+      background-color: #333;
+      color: #e0e0e0;
+    }
+
+    .mode-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 2rem;
+      transition: background-color 0.3s, color 0.3s;
+      border-radius: 50%;
+      padding: 10px;
+    }
+
+    .mode-toggle.sun {
+      color: #ffdf00;
+    }
+
+    .mode-toggle.moon {
+      color: #e0e0e0;
+    }
+  </style>
+</head>
+<body>
+
+  <button class="mode-toggle sun" onclick="toggleMode()">&#9728;</button>
+  
+  <div class="container">
+    <div class="header">
+      Interactive Linux Command Guide
+      <p>Help and Information</p>
+    </div>
+    <div class="commands-container">
+      <div class="command-card" onclick="toggleDetails('introduction')">Introduction</div>
+      <div class="command-card" onclick="toggleDetails('apropos')">Apropos</div>
+      <div class="command-card" onclick="toggleDetails('info')">Info</div>
+      <div class="command-card" onclick="toggleDetails('alias')">Alias</div>
+      <div class="command-card" onclick="toggleDetails('uname')">Uname</div>
+      <div class="command-card" onclick="toggleDetails('df')">Df</div>
+      <div class="command-card" onclick="toggleDetails('du')">Du</div>
+      <div class="command-card" onclick="toggleDetails('mount')">Mount</div>
+      <div class="command-card" onclick="toggleDetails('ln')">Ln</div>
+      <div class="command-card" onclick="toggleDetails('man')">Man</div>
+    </div>
+
+    <!-- Command Details -->
+   <div id="introduction-details" class="command-details">
+    <h2 style="color: #008080; font-size: 1.8em; text-align: center;">Introduction to Linux</h2>
+    <p style="font-size: 1.1em; line-height: 1.6; color: #80CCCC;">
+        Linux is an open-source, Unix-like operating system initially created by Linus Torvalds in 1991. It was designed to be free, reliable, and highly customizable, with the goal of providing a powerful operating system that could be used by anyone without licensing restrictions. Unlike proprietary operating systems, Linux allows users to view, modify, and distribute the source code, which has led to its widespread use across various platforms, from personal desktops to mobile phones, and even supercomputers. Over time, Linux has gained significant popularity, especially in server environments, where its stability and scalability are crucial.
+    </p>
+    <hr style="border: 1px solid #008080; width: 80%; margin: 20px auto;">
+    <div style="margin-bottom: 30px;">
+        <h3 style="color: #008080;">Key Features of Linux:</h3>
+        <ul style="font-size: 1.1em; color:#80CCCC;">
+            <li><strong>Open-Source Nature:</strong> Developed under the GNU General Public License (GPL), allowing users to modify and share the code.</li>
+            <li><strong>Cost-Effectiveness:</strong> Free to download and use, making it ideal for both personal and business use.</li>
+            <li><strong>Security:</strong> Less vulnerable to viruses and malware, with prompt security patches from the community.</li>
+            <li><strong>Stability and Reliability:</strong> Highly favored in server environments, with its ability to handle large workloads without crashes.</li>
+            <li><strong>Flexibility:</strong> Customizable to meet different user needs and supports a wide range of hardware.</li>
+        </ul>
+    </div>
+
+    <p style="font-size: 1.1em; line-height: 1.6; color: #80CCCC;">
+        Lastly, Linux benefits from strong community support. Since it is open-source, users can access a wealth of resources, including online forums, documentation, and tutorials, to help troubleshoot problems or learn more about the system. The active Linux community fosters a collaborative environment where users can exchange ideas, offer assistance, and contribute to the ongoing development of the operating system. This sense of community makes Linux not only a reliable operating system but also an enjoyable and educational platform for both new and experienced users.
+    </p>
+    <hr style="border: 1px solid #008080; width: 80%; margin: 20px auto;">
+ 
+    
+</div>    
+<div id="apropos-details" class="command-details">
+      <h3 style="color: #008080;">Apropos Command</h3>
+      <p><strong>Purpose:</strong> Search the manual page database for a keyword.</p>
+      <p><strong>Explanation:</strong>
+        <ul>
+          <li><strong>How it Works:</strong>  The apropos command works by searching through the whatis database, which contains short descriptions of commands and other documentation from the man pages. When you run apropos <keyword>, it matches the keyword against these descriptions and returns a list of commands that might be relevant. It helps to quickly find commands related to a certain task, even if you don’t remember the exact command name. The whatis database is created and updated by the mandb command, which indexes the manual pages..</li>
+          <li><strong>Common Use Cases:</strong> When you’re unsure of the exact command you need, use `apropos` to search for related keywords.</li>
+          <li><strong>Output:</strong> Lists manual pages that contain the keyword in their description.</li>
+          <li><strong>Advantages:</strong> Useful for discovering related commands when you have a vague idea of what you're looking for.</li>
+<br>
+        </ul>
+      </p>
+<pre>Usage Example: apropos network</pre>
+
+<img src="photoapropos.jpg" alt="Linux Command Guide - Apropos" style="width: 700px; border-radius: 15px; margin-top: 20px;">
+<button class="back-to-top" onclick="scrollToTop()">↑</button>
+
+</div>
+    </div>
+
+    <div id="info-details" class="command-details">
+      <h3 style="color: #008080;">Info Command</h3>
+      <p><strong>Purpose:</strong> View detailed and structured documentation of commands.</p>
+      <pre>Usage Example: info ls</pre>
+      <p><strong>Explanation:</strong>
+        <ul>
+          <li><strong>How it Works:</strong> The info command accesses a system’s info pages, a form of documentation that is often more structured and detailed compared to man pages. The info command works by presenting documentation in a navigable format where sections and subsections are hyperlinked, allowing users to follow a trail of related topics. Unlike man pages, which are typically written in a linear format, info pages can contain multiple levels of documentation and links to other topics for a deeper dive into complex commands..</li>
+          <li><strong>Common Use Cases:</strong> When you need deeper, linked documentation about a command or topic.</li>
+          <li><strong>Output:</strong> Structured information with hyperlinks to related topics.</li>
+          <li><strong>Advantages:</strong> More in-depth and structured than the `man` command, useful for comprehensive learning.</li>
+<br>
+        </ul>
+      </p>
+<pre>Usage Example: info ls</pre>
+<img src="photoinfo.jpg" alt="Linux Command Guide - Info" style="width: 700px; border-radius: 15px; margin-top: 20px;">
+
+
+
+    </div>
+
+    <div id="alias-details" class="command-details">
+      <h3 style="color: #008080;">Alias Command</h3>
+      <p><strong>Purpose:</strong> Create shortcuts for commands.</p>
+      <pre>Usage Example: alias ll='ls -l'</pre>
+      <p><strong>Explanation:</strong>
+        <ul>
+          <li><strong>How it Works:</strong> The alias command creates a shortcut (or alias) for a command. This is typically used to avoid repetitive typing of long commands. The alias is stored in the current shell session and can be used to invoke commands with shorter or customized syntax. When you type an alias in the terminal, the shell expands it into the full command. For instance, alias ll='ls -l' would make ll a shortcut for ls -l. Aliases can be set temporarily in a session or permanently by adding them to your shell configuration file (like ~/.bashrc or ~/.zshrc).
+
+</li>
+          <li><strong>Common Use Cases:</strong> To reduce the typing effort by creating simpler commands for commonly used tasks.</li>
+          <li><strong>Output:</strong> Shows the new alias or displays an error if the alias is invalid.</li>
+          <li><strong>Advantages:</strong> Increases productivity by simplifying repeated commands.</li>
+<br>
+        </ul>
+      </p>
+<pre>Usage Example: alias ll='ls -l'</pre>
+<img src="photoalias.jpg" alt="Linux Command Guide - Alias" style="width: 700px; border-radius: 15px; margin-top: 20px;">
+
+
+    </div>
+
+    <div id="uname-details" class="command-details">
+      <h3 style="color: #008080;">Uname Command</h3>
+      <p><strong>Purpose:</strong> Displays system information such as the operating system, kernel, and machine type.</p>
+           <p><strong>Explanation:</strong>
+        <ul>
+          <li><strong>How it Works:</strong> The uname command provides details about the operating system and kernel. When executed with no options, it typically shows the kernel name (e.g., Linux). Adding options like -r shows the kernel release version, -m displays the machine architecture (e.g., x86_64), and -a shows all available information. It works by querying the system for these values and printing them to the screen. This information is pulled from kernel-level data and system configuration files..</li>
+          <li><strong>Common Use Cases:</strong> Useful for troubleshooting, system information checks, or ensuring system compatibility.</li>
+          <li><strong>Output:</strong> By default, it shows the kernel name. Adding options (e.g., `-r` for kernel release) displays more detailed information.</li>
+          <li><strong>Advantages:</strong> Quick and easy access to essential system details from the command line.</li>
+<br>
+        </ul>
+      </p>
+ <pre>Usage Example: uname -r</pre>
+<img src="photouname.jpg" alt="Linux Command Guide - Uname" style="width: 700px; border-radius: 15px; margin-top: 20px;">
+
+
+
+    </div>
+
+    <div id="df-details" class="command-details">
+      <h3 style="color: #008080;">Df Command</h3>
+      <p><strong>Purpose:</strong> Display disk space usage.</p>
+      <p><strong>Explanation:</strong>
+        <ul>
+          <li><strong>How it Works:</strong> The df command reports the disk space usage for all mounted filesystems. It works by querying the operating system’s kernel for information about the disk partitions and their current space utilization. The df command then reads this information from the kernel and displays the amount of space used, available space, and total space for each filesystem. When you add the -h flag, it converts the sizes into a human-readable format (KB, MB, GB). This is helpful for users who need to monitor disk usage and free up space.
+
+.</li>
+          <li><strong>Common Use Cases:</strong> Checking available disk space before performing file-intensive tasks.</li>
+          <li><strong>Output:</strong> Shows file system statistics, including disk usage and free space.</li>
+          <li><strong>Advantages:</strong> Essential for monitoring disk usage and managing storage resources.</li>
+<br>
+        </ul>
+      </p>
+<pre>Usage Example: df -h</pre>
+<img src="photodf.jpg" alt="Linux Command Guide - Df" style="width: 700px; border-radius: 15px; margin-top: 20px;">
+
+
+    </div>
+
+    <div id="du-details" class="command-details">
+      <h3 style="color: #008080;">Du Command</h3>
+      <p><strong>Purpose:</strong> Display disk usage of files and directories.</p>
+      <p><strong>Explanation:</strong>
+        <ul>
+          <li><strong>How it Works:</strong> The du command estimates and displays the disk usage of files and directories. It works by recursively scanning the specified directory and its contents to calculate the total disk space used by those files. By default, it shows the space in 1KB blocks, but the -h option allows it to display in a human-readable format. You can also use -s to summarize the total usage for a specific directory. The du command traverses the file system tree to collect and sum up the disk space consumed by files and directories.
+
+.</li>
+          <li><strong>Common Use Cases:</strong> Checking disk space usage for directories, especially large ones.</li>
+          <li><strong>Output:</strong> Shows the space used by files or directories.</li>
+          <li><strong>Advantages:</strong> Helps identify large files and directories that consume disk space.</li>
+<br>
+        </ul>
+      </p>
+<pre>Usage Example: du -sh /var/log</pre>
+<img src="photodu.jpg" alt="Linux Command Guide - Du" style="width: 700px; border-radius: 15px; margin-top: 20px;">
+
+
+
+    </div>
+
+    <div id="mount-details" class="command-details">
+      <h3 style="color: #008080;">Mount Command</h3>
+      <p><strong>Purpose:</strong> Mount file systems or devices.</p>
+      <p><strong>Explanation:</strong>
+        <ul>
+          <li><strong>How it Works:</strong> The mount command is used to attach a storage device (such as a hard disk or USB drive) to a directory on the file system. It works by taking a device (e.g., /dev/sdb1) and associating it with a directory (e.g., /mnt), making the contents of the device accessible from that directory. Once mounted, any files and directories on the device will be available under the specified mount point. The mount command also works with file systems (e.g., ext4, ntfs) and various options (like read-only or read-write) that dictate how the device is mounted.</li>
+          <li><strong>Common Use Cases:</strong> Mounting external drives, partitions, or file systems to access data.</li>
+          <li><strong>Output:</strong> Displays the status of the mount operation.</li>
+          <li><strong>Advantages:</strong> Provides access to external file systems or new devices on the system.</li>
+<br>
+        </ul>
+      </p>
+<pre>Usage Example: mount -l-t ext4</pre>
+<img src="photomount.jpg" alt="Linux Command Guide - Mount" style="width: 700px; border-radius: 15px; margin-top: 20px;">
+
+
+    </div>
+
+   <div id="ln-details" class="command-details">
+  <h3 style="color: #008080;">Ln Command</h3>
+  <p><strong>Purpose:</strong> Create hard and symbolic links to files.</p>
+  <p><strong>Explanation:</strong>
+    <ul>
+      <li><strong>How it Works:</strong> The ln command creates links between files or directories. It can create two types of links:
+        <ul style="padding-left: 20px;"> <!-- Indentation applied here -->
+          <li><strong>Hard links:</strong> These are direct references to the same data blocks on disk. When a hard link is created, it refers to the same inode (data structure that represents a file) as the original file. Both the original file and the hard link point to the same data, so changes to one affect the other.</li>
+          <li><strong>Symbolic (soft) links:</strong> These are like shortcuts or pointers to the original file or directory. They contain the path to the target and are separate files themselves. Unlike hard links, symbolic links can cross file system boundaries and can point to non-existent files, in which case they are broken links.</li>
+        </ul>
+      </li>
+      <li><strong>Common Use Cases:</strong> Creating shortcuts or references to files across directories.</li>
+      <li><strong>Output:</strong> Displays information about the new link.</li>
+      <li><strong>Advantages:</strong> Saves space and provides flexible file management by linking to files instead of copying them.</li>
+<br>
+    </ul>
+  </p>
+ <pre>Usage Example: ln -s /usr/bin/python python-link</pre>
+<img src="photoln.jpg" alt="Linux Command Guide - Ln" style="width: 700px; border-radius: 15px; margin-top: 20px;">
+
+
+
+</div>
+
+
+
+    <div id="man-details" class="command-details">
+      <h3 style="color: #008080;">Man Command</h3>
+      <p><strong>Purpose:</strong> Display the manual pages for commands.</p>
+           <p><strong>Explanation:</strong>
+        <ul>
+          <li><strong>How it Works:</strong>  The man command is used to display the manual pages for various commands and system features. Each manual page contains detailed documentation about a command, including its options, syntax, and usage examples. The man command works by searching through the system’s manual page database (typically stored in /usr/share/man) and displaying the content in a paginated format. It can also search within specific sections (e.g., user commands, system calls, or configuration files) depending on the section number provided.
+
+.</li>
+          <li><strong>Common Use Cases:</strong> Look up command usage, options, and examples.</li>
+          <li><strong>Output:</strong> Displays a manual page with detailed information about the command.</li>
+          <li><strong>Advantages:</strong> Essential for discovering and understanding the usage of commands.</li>
+<br>
+        </ul>
+      </p>
+ <pre>Usage Example: man ls</pre>
+<img src="photoman.jpg" alt="Linux Command Guide - Man" style="width: 700px; border-radius: 15px; margin-top: 20px;">
+
+
+
+    </div>
+
+  </div>
+
+  <div class="footer">
+    &copy; 2025 Linux Command Guide. All Rights Reserved.
+  </div>
+
+  <script>
+    function toggleDetails(command) {
+      var detailsElement = document.getElementById(command + '-details');
+      if (detailsElement.style.display === 'block') {
+        detailsElement.style.display = 'none';
+      } else {
+        document.querySelectorAll('.command-details').forEach(function (el) {	
+          el.style.display = 'none';
+        });
+        detailsElement.style.display = 'block';
+      }
+    }
+
+    function toggleMode() {
+      var body = document.body;
+      var modeToggleButton = document.querySelector('.mode-toggle');
+      body.classList.toggle('light-mode');
+      body.classList.toggle('dark-mode');
+
+      if (body.classList.contains('dark-mode')) {
+        modeToggleButton.innerHTML = '&#9733;'; // Sun icon for light mode
+      } else {
+        modeToggleButton.innerHTML = '&#9789;'; // Moon icon for dark mode
+      }
+    }
+  </script>
+</body>
+</html>
